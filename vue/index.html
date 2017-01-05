@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<style>
+		*{padding:0; margin:0;}
+	</style>
+</head>
+<body>
+
+	<div id="app">
+		<input type="text" id="a">
+		<span id="b"></span>
+	</div>
+
+	<script>
+		var dom = nodeToFragment(document.getElementById('app'));
+		console.log(dom);
+		function nodeToFragment(node){
+			var flag = document.createDocumentFragment();
+			var child;
+			while(child = node.firstChild){
+				//劫持node的所有子节点
+				flag.append(child);	
+			}
+			return flag;
+		}
+		//document.getElementById('app').appendChild(dom);
+		//
+		//
+		
+		function compile(node, vm){
+			var reg = /\{\{(.*)\}\}/;
+
+			if(node.nodeType === 1){
+				var attr = node.attributes;
+				//解析属性
+				for(var i = 0; i < attr.length;i++){
+					if(attr[i].nodeName === 'v-model'){
+						var name = attr[i].nodeValue;
+						node.value = vm.data[name];
+						node.removeAttribute('v-model');
+					}	
+				};
+			}
+			//节点类型为text
+			if(node.nodeType === 3){
+				if(reg.test(node.nodeValue)){
+					var name = RegExp.$1;
+					name = name.trim();
+				}
+			}
+
+		}
+	</script>
+
+	
+</body>
+</html>
