@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<script src="../resource/vue.js"></script>
+</head>
+<body>
+	
+	<div id="app">
+		{{ message }}
+	</div>
+	
+	<script>
+		var vm = new Vue({
+			el: "#app",
+			data: {
+				message: "Hello Vue"
+			},
+			beforeCreate: function(){
+				console.log(this.$el);
+				console.log(this.message);
+			},
+			beforeMount: function(){
+				console.log(this.$el);
+				console.log(this.message);
+			},
+			mounted: function(){
+				console.log(this.$el);
+				console.log(this.message);
+			}
+
+		});
+	</script>
+</body>
+</html>
