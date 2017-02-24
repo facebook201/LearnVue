@@ -9,27 +9,69 @@
 	
 	<div id="app">
 		{{ message }}
+		<p>
+			{{ myAge }}
+		</p>
+		<p> {{ name | capitalize }} </p>
 	</div>
 	
 	<script>
 		var vm = new Vue({
 			el: "#app",
 			data: {
-				message: "Hello Vue"
+				message: "Hello Vue",
+				name: 'shiyao'
 			},
+			filters: {
+				capitalize: function (value) {
+					if (!value) return '';
+					value = value.toString();
+					return value.charAt(0).toUpperCase() + value.slice(1);
+				}
+			},
+			computed: {
+				myAge: function(){
+					var m = new Date();
+					return m.getFullYear() - 1993;
+				} 
+			},
+			// 实例初始化之后 数据观测 和 event/watcher 之前
 			beforeCreate: function(){
 				console.log(this.$el);
 				console.log(this.message);
 			},
+			// 实例完成之后被调用 数据已经被观测 但是还没有挂载 $el 不可见
+			created: function(){
+				console.log(this.$el);
+				console.log(this.message);
+			},
+			// 	挂载开始之前被调用 相关的render函数首次被调用 但是el是可见的 但是此时没有生成html到页面上去
 			beforeMount: function(){
 				console.log(this.$el);
 				console.log(this.message);
 			},
+			// 挂载完成 模板渲染到了html上 此时可以做一些ajax mounted 只会执行一次
 			mounted: function(){
 				console.log(this.$el);
 				console.log(this.message);
-			}
-
+			},
+			// 数据更新时调用 发生在虚拟DOM重新渲染
+			beforeUpdate: function() {
+				console.log(this.$el);
+				console.log(this.message);				
+			},
+			updated: function(){
+				console.log(this.$el);
+				console.log(this.message);
+			},
+			beforeDestroy: function(){
+				console.log(this.$el);
+				console.log(this.message);
+			},
+			destroyed: function () {
+        console.log('destroyed 钩子执行...');
+        console.log(this.message)
+      },
 		});
 	</script>
 </body>
