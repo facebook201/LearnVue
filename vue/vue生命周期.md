@@ -49,3 +49,5 @@ vue实例被销毁。但是el 和 data存在。
 此时只是创建vue实例 还没有开始监听data。所以el 和 data 都是undefined
 
 
+### 简化之后的图
+![border](http://images2015.cnblogs.com/blog/1064935/201701/1064935-20170103211421987-2119701214.png)
