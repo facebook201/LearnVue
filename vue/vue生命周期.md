@@ -1,6 +1,7 @@
 ### Vue的生命周期
 官网的图
-![border](http://images.cnblogs.com/cnblogs_com/fly_dragon/276813/o_lifecycle-%E6%A0%87%E6%B3%A8%E7%89%88%E6%9C%AC.png)
+![border](https://vuefe.cn/images/lifecycle.png)
+(http://images.cnblogs.com/cnblogs_com/fly_dragon/276813/o_lifecycle-%E6%A0%87%E6%B3%A8%E7%89%88%E6%9C%AC.png)
 
 接下来一步步的解释分析Vue的生命周期。Vue有一个完整的生命周期,
 从开始创建、初始化数据、编译模板、挂载Dom、渲染——>更新——>渲染、卸载
@@ -24,7 +25,7 @@ var vm = new Vue({
     }
 });
 ```
-![border](http://images.cnblogs.com/cnblogs_com/fly_dragon/276813/o_lifecycle-%E6%A0%87%E6%B3%A8%E7%89%88%E6%9C%AC.png)
+
  首先创建vue的实例对象,然后就执行beforeCreated事件钩子,此时el和data都是undefined。因为还没有监听数据
 。然后开始监听数据(Observe Data),这个时候就已经有data数据 然后初始化事件(init Events)。接下来执行created
 事件钩子。此时有data数据,但是没有el。然后判断传入的选项对象里面是否有el，如果没有就等到实例挂载函数$mount被调用，
