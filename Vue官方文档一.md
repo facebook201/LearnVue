@@ -36,6 +36,7 @@ this.lists = res.detail.data.map((v) => {
 // {Object | Array} target,  {string | number} key { value } any
 Vue.set(this.lists, info, '');
 
-
 ```
+
+除了data属性，Vue实例暴露了一些有用的实例属性与方法。这些属性与方法都有前缀$。以便与代理的data属性区分。
 
