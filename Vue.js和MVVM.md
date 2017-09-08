@@ -1,3 +1,4 @@
+
 Vue是采用的数据劫持结合观察者模式。通过Object.defineProperty() 来劫持各个属性的 getter、setter方法。 在数据变动时发布消息给订阅者、触发监听回调。
 
 ![border](https://segmentfault.com/img/bVBQYu/view)
@@ -41,28 +42,5 @@ function defineReactive(data, key, val) {
   });
 }
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
