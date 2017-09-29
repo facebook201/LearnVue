@@ -35,8 +35,31 @@ this.lists = res.detail.data.map((v) => {
 // 第二 Vue.set (target, key, value)
 // {Object | Array} target,  {string | number} key { value } any
 Vue.set(this.lists, info, '');
-
 ```
 
 除了data属性，Vue实例暴露了一些有用的实例属性与方法。这些属性与方法都有前缀$。以便与代理的data属性区分。
+
+
+
+### 非父子组件通信
+
+* 兄弟组件 可以将消息先传给父组件 再通过父组件 传给子组件。
+
+* 非兄弟组件 可以使用 一个空的vue实例做事件总线
+
+  ```javascript
+  var bus = new Vue();
+  bus.$emit('id-selected', 1);
+  bus.$on('id-selected', function(id){
+    //...    
+  });
+  ```
+
+  ​
+
+* 更加复杂的情况 应该考虑Vuex
+
+
+
+#### 异步组件
 

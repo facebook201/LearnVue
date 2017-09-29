@@ -3,6 +3,11 @@
 ![border](https://vuefe.cn/images/lifecycle.png)
 (http://images.cnblogs.com/cnblogs_com/fly_dragon/276813/o_lifecycle-%E6%A0%87%E6%B3%A8%E7%89%88%E6%9C%AC.png)
 
+* beforecreated：el 和 data 并未初始化 
+* created : 完成了 data 数据的初始化，el没有
+* beforeMount ：完成了 el 和 data 初始化 
+* mounted ：完成挂载
+
 接下来一步步的解释分析Vue的生命周期。Vue有一个完整的生命周期,
 从开始创建、初始化数据、编译模板、挂载Dom、渲染——>更新——>渲染、卸载
 等一系列过程，也就是vue实例从创建到销毁的过程。就是生命周期。我会
@@ -16,7 +21,7 @@
 var vm = new Vue({
     el: '#app',
     data: {
-	message: "Hello Vue!"
+	  message: "Hello Vue!"
     },
     beforeCreated: function() {
         console.log('beforeCreate 钩子执行...');

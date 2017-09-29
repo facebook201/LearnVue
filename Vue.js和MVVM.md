@@ -31,7 +31,7 @@ function defineReactive(data, key, val) {
   observer(val);
   Object.defineProperty(data, key, {
     enumerable: true, // 可枚举
-    configurable: false, // 不能define
+    configurable: false, // 不能define 
     get: function() {
       return val;
     },
@@ -43,4 +43,18 @@ function defineReactive(data, key, val) {
 }
 ```
 
+
+
+#### Vue异步组件
+
+```javascript
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import config from 'config';
+
+Vue.use(VueRouter);
+
+
+
+```
 
