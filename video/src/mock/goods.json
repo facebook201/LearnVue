@@ -1,0 +1,90 @@
+[
+  {
+    "id": 1,
+    "name": "商品名称",
+    "url": "http://wx4.sinaimg.cn/bmiddle/0061YJJsgy1fg25i7h3d8j30jg0jigm7.jpg",
+    "price": 12,
+    "sale": 122,
+    "isRecommend": true,
+    "amount": 12,
+    "variety": ["热饮", "冷饮"],
+    "tag": ["人气", "土豪", "推荐"]
+  },
+  {
+    "id": 2,
+    "name": "商品名称",
+    "url": "http://wx4.sinaimg.cn/bmiddle/0061YJJsgy1fg25i7h3d8j30jg0jigm7.jpg",
+    "price": 12,
+    "sale": 122,
+    "isRecommend": true,
+    "amount": 12,
+    "variety": ["热饮", "冷饮"],
+    "tag": ["人气", "土豪", "推荐"]
+  },
+  {
+    "id": 3,
+    "name": "商品名称",
+    "url": "http://wx4.sinaimg.cn/bmiddle/0061YJJsgy1fg25i7h3d8j30jg0jigm7.jpg",
+    "price": 12,
+    "sale": 122,
+    "isRecommend": true,
+    "amount": 12,
+    "variety": ["热饮", "冷饮"],
+    "tag": ["人气", "土豪", "推荐"]
+  },
+  {
+    "id": 4,
+    "name": "商品名称",
+    "url": "http://wx4.sinaimg.cn/bmiddle/0061YJJsgy1fg25i7h3d8j30jg0jigm7.jpg",
+    "price": 12,
+    "sale": 122,
+    "isRecommend": true,
+    "amount": 12,
+    "variety": ["热饮", "冷饮"],
+    "tag": ["人气", "土豪", "推荐"]
+  },
+   {
+    "id": 12,
+    "name": "商品名称",
+    "url": "http://wx4.sinaimg.cn/bmiddle/0061YJJsgy1fg25i7h3d8j30jg0jigm7.jpg",
+    "price": 12,
+    "sale": 122,
+    "isRecommend": true,
+    "amount": 12,
+    "variety": ["热饮", "冷饮"],
+    "tag": ["人气", "土豪", "推荐"]
+  },
+   {
+    "id": 5,
+    "name": "商品名称",
+    "url": "http://wx4.sinaimg.cn/bmiddle/0061YJJsgy1fg25i7h3d8j30jg0jigm7.jpg",
+    "price": 12,
+    "sale": 122,
+    "isRecommend": true,
+    "amount": 12,
+    "variety": ["热饮", "冷饮"],
+    "tag": ["人气", "土豪", "推荐"]
+  },
+   {
+    "id": 6,
+    "name": "商品名称",
+    "url": "http://wx4.sinaimg.cn/bmiddle/0061YJJsgy1fg25i7h3d8j30jg0jigm7.jpg",
+    "price": 12,
+    "sale": 122,
+    "isRecommend": true,
+    "amount": 12,
+    "variety": ["热饮", "冷饮"],
+    "tag": ["人气", "土豪", "推荐"]
+  },
+   {
+    "id": 42,
+    "name": "商品名称",
+    "url": "http://wx4.sinaimg.cn/bmiddle/0061YJJsgy1fg25i7h3d8j30jg0jigm7.jpg",
+    "price": 12,
+    "sale": 122,
+    "isRecommend": true,
+    "amount": 12,
+    "variety": ["热饮", "冷饮"],
+    "tag": ["人气", "土豪", "推荐"]
+  }
+]
