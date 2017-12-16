@@ -1,7 +1,9 @@
 ### Vue的生命周期
 官网的图
-![border](https://vuefe.cn/images/lifecycle.png)
-(http://images.cnblogs.com/cnblogs_com/fly_dragon/276813/o_lifecycle-%E6%A0%87%E6%B3%A8%E7%89%88%E6%9C%AC.png)
+
+![border](https://cn.vuejs.org/images/lifecycle.png)
+
+![border](http://images.cnblogs.com/cnblogs_com/fly_dragon/276813/o_lifecycle-%E6%A0%87%E6%B3%A8%E7%89%88%E6%9C%AC.png)
 
 * beforecreated：el 和 data 并未初始化 
 * created : 完成了 data 数据的初始化，el没有
