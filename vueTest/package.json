@@ -1,7 +1,7 @@
 {
-  "name": "video",
+  "name": "vuetest",
   "version": "1.0.0",
-  "description": "test chimee video",
+  "description": "A Vue.js project",
   "author": "syo <syolmm@qq.com>",
   "private": true,
   "scripts": {
@@ -11,9 +11,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
-    "axios": "^0.17.1",
     "chimee-mobile-player": "^0.0.2",
-    "mockjs": "^1.0.1-beta3",
     "vue": "^2.5.2"
   },
   "devDependencies": {
@@ -39,7 +37,6 @@
     "eslint-plugin-node": "^5.2.0",
     "eslint-plugin-promise": "^3.4.0",
     "eslint-plugin-standard": "^3.0.1",
-    "eventsource-polyfill": "^0.9.6",
     "extract-text-webpack-plugin": "^3.0.0",
     "file-loader": "^1.1.4",
     "friendly-errors-webpack-plugin": "^1.6.1",

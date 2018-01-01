@@ -1,6 +1,6 @@
-# video
+# vuetest
 
-> test chimee video
+> A Vue.js project
 
 ## Build Setup
 
