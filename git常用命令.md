@@ -34,13 +34,13 @@ git checkout  matser
 
 git branch -D 分支名
 
-
-
 git branch -D 分支1 分支2 分支3  **批量删除本地分支**
 
 
 
 **删除远程分支**
+
+git push origin --delete branchname
 
 git push origin -d branchName
 
