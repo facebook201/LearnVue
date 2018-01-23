@@ -120,8 +120,8 @@ git push origin -d syo1 syo2 syo3    **批量删除远程分支**
 ### remote 
 
 * 添加远程地址 git remote add origin [address]
-
-  ​
-
+* 建立本地分支和远程的联系 首先我们可以 git banch -vv 查看本地和远程的关联关系。
+  如果没有关联关系  git branch --set-upstream-to=origin/bugfix 关联起远程分支的名字
+   
 * 分支推送到远程分支 git push origin syo 
 
