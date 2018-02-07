@@ -105,6 +105,34 @@ initMixin函数
  callHook(vm, 'created');
 ```
 
+接下来看看里面的初始化函数。
+
+```javascript
+// initLifecycle 生命周期相关变量的初始化
+function initLifeCycle(vm) {
+  	var options = vm.$options;
+
+	var parent = options.parent;
+
+	vm.$parent = parent;
+	vm.$root = parent ? parent.$root : vm;
+
+	vm.$children = [];
+	vm.$refs = {}; // dom节点
+
+	vm._watcher = null;
+    vm._inactive = null;
+    vm._directInactive = false;
+    vm._isMounted = false;
+    vm._isDestroyed = false;
+    vm._isBeingDestroyed = false;
+}
+```
+
+
+
+
+
 
 
 
@@ -122,4 +150,8 @@ initMixin函数
 
 
 
-
+> 问题
+>
+> 1 为什么生命周期钩子函数放在数组里面
+>
+> 

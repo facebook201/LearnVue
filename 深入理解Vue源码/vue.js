@@ -2645,6 +2645,7 @@ function deactivateChildComponent (vm, direct) {
 function callHook (vm, hook) {
   var handlers = vm.$options[hook];
   if (handlers) {
+		console.log(handlers);
     for (var i = 0, j = handlers.length; i < j; i++) {
       try {
         handlers[i].call(vm);
