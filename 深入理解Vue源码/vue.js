@@ -129,9 +129,13 @@ function remove (arr, item) {
 
 /**
  * Check whether the object has the property.
+ * 缓存hasOwnProperty 检查属性是否是当前实例的 而不是原型的
+ * 且属性值要用字符串表示
+ * hasOwnProperty.call(obj, 'name');
  */
 var hasOwnProperty = Object.prototype.hasOwnProperty;
 function hasOwn (obj, key) {
+	// 返回true or false
   return hasOwnProperty.call(obj, key)
 }
 
@@ -737,12 +741,16 @@ var uid = 0;
 /**
  * A dep is an observable that can have multiple
  * directives subscribing to it.
+ * Dep 实例是可观察的。可以有多个指令订阅它
  */
 var Dep = function Dep () {
+	// 给每一个订阅者watcher 做唯一标识符 防止重复收集
   this.id = uid++;
+	// 定义subs 数组 用来收集依赖 收集所有的订阅者
   this.subs = [];
 };
 
+// 收集订阅者
 Dep.prototype.addSub = function addSub (sub) {
   this.subs.push(sub);
 };
@@ -757,8 +765,10 @@ Dep.prototype.depend = function depend () {
   }
 };
 
+// 当劫持的数据变更的时候 通知订阅者watcher进行 update操作
 Dep.prototype.notify = function notify () {
   // stabilize the subscriber list first
+	// 稳定订阅者列表 先复制一份
   var subs = this.subs.slice();
   for (var i = 0, l = subs.length; i < l; i++) {
     subs[i].update();
@@ -773,10 +783,12 @@ var targetStack = [];
 
 function pushTarget (_target) {
   if (Dep.target) { targetStack.push(Dep.target); }
+	// 改变目标指向
   Dep.target = _target;
 }
 
 function popTarget () {
+	// 删除当前目标 重新指向
   Dep.target = targetStack.pop();
 }
 
@@ -861,9 +873,12 @@ var Observer = function Observer (value) {
  * Walk through each property and convert them into
  * getter/setters. This method should only be called when
  * value type is Object.
+ * 遍历每一个对象并在他们上面绑定getter、setter
+ * 这个方法只有在value类型是对象的时候才能被调用
  */
 Observer.prototype.walk = function walk (obj) {
   var keys = Object.keys(obj);
+	// 遍历将其变为vue的访问器属性
   for (var i = 0; i < keys.length; i++) {
     defineReactive$$1(obj, keys[i], obj[keys[i]]);
   }
@@ -906,21 +921,31 @@ function copyAugment (target, src, keys) {
  * Attempt to create an observer instance for a value,
  * returns the new observer if successfully observed,
  * or the existing observer if the value already has one.
+ * 尝试创建一个 observer 实例。如果被成功观察就返回一个观察者实例
+ * 如果有一个实例就退出
  */
 function observe (value, asRootData) {
+	// 必须是一个对象
   if (!isObject(value)) {
     return
   }
   var ob;
+	// 根据__ob__ 判断是否有Observer实例, 如果没有Observer实例则会新建一个Observer实例并赋值给__ob__这个属性，如果已有Observer实例则直接返回该Observer实例
   if (hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) {
     ob = value.__ob__;
   } else if (
+		/*
+			这里的判断是为了确保value是单纯的对象，而不是函数或者是Regexp等情况。
+			而且该对象在shouldConvert的时候才会进行Observer。这是一个标识位，避免重复对value进行Observer
+		*/
     observerState.shouldConvert &&
     !isServerRendering() &&
     (Array.isArray(value) || isPlainObject(value)) &&
     Object.isExtensible(value) &&
     !value._isVue
   ) {
+		// 首先只是对象类型才会收集依赖 如果没有__ob__ 属性 就返回一个新的实例
+		// ob 里面带有 dep属性
     ob = new Observer(value);
   }
   if (asRootData && ob) {
@@ -930,7 +955,7 @@ function observe (value, asRootData) {
 }
 
 /**
- * Define a reactive property on an Object.
+ * 设置访问器属性 监听对象。使用发布订阅模式 相互监听
  */
 function defineReactive$$1 (
   obj,
@@ -939,24 +964,30 @@ function defineReactive$$1 (
   customSetter,
   shallow
 ) {
+	// 生成一个收集依赖的实例
   var dep = new Dep();
 
+	// 获取属性描述符对象
   var property = Object.getOwnPropertyDescriptor(obj, key);
+	// 确保存在这个对象以及这个对象是可配置的
   if (property && property.configurable === false) {
     return
   }
 
   // cater for pre-defined getter/setters
+	// 来判断这个属性是否有get set方法
   var getter = property && property.get;
   var setter = property && property.set;
 
   var childOb = !shallow && observe(val);
+	console.log(childOb);
   Object.defineProperty(obj, key, {
     enumerable: true,
     configurable: true,
     get: function reactiveGetter () {
       var value = getter ? getter.call(obj) : val;
       if (Dep.target) {
+				// 通过标志来判断是否可以收集依赖
         dep.depend();
         if (childOb) {
           childOb.dep.depend();
@@ -2645,7 +2676,6 @@ function deactivateChildComponent (vm, direct) {
 function callHook (vm, hook) {
   var handlers = vm.$options[hook];
   if (handlers) {
-		console.log(handlers);
     for (var i = 0, j = handlers.length; i < j; i++) {
       try {
         handlers[i].call(vm);
@@ -2858,6 +2888,7 @@ var Watcher = function Watcher (
  * Evaluate the getter, and re-collect dependencies.
  */
 Watcher.prototype.get = function get () {
+	// 将目标收集到目标栈
   pushTarget(this);
   var value;
   var vm = this.vm;

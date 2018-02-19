@@ -28,48 +28,46 @@
 > 我们先看看源码的实现
 
 ```javascript
-		// 初始化操作
-	function initMixin (Vue) {
-		Vue.prototype._init = function (options) {
-			var vm = this;
-			vm._uid = uid$1++;
-			/* */
+// 初始化操作
+function initMixin (Vue) {
+	Vue.prototype._init = function (options) {
+		var vm = this;
+		vm._uid = uid$1++;
+		
+		// 初始化 生命周期 事件 render 
+		initLifecycle(vm);
+		initEvents(vm);
+		initRender(vm);
+		initRender(vm);
+		callHook(vm, 'beforeCreate');
+		// 在beforeCreate 之后解决注入 data 和 props 
+		initInjections(vm);
+		initState(vm);
+		initProvide(vm);
+		// 在created 之后解决注入 data 和 props 
+		callHook(vm, 'created');
 
-			// 初始化 生命周期 事件 render 
-			initLifecycle(vm);
-			initEvents(vm);
-			initRender(vm);
-			initRender(vm);
-			callHook(vm, 'beforeCreate');
-			// 在beforeCreate 之后解决注入 data 和 props 
-			initInjections(vm);
-			initState(vm);
-			initProvide(vm);
-			// 在created 之后解决注入 data 和 props 
-			callHook(vm, 'created');
-
-			// 如果存在el 则调用$mount
-			if (vm.$options.el) {
-				vm.$mount(vm.$options.el);
-			}
+		// 如果存在el 则调用$mount
+		if (vm.$options.el) {
+			vm.$mount(vm.$options.el);
 		}
 	}
+}
 
-	// 根据vue来实现类似的构造函数 加深对源码的理解
-	function Vue3(options) {
-		if (!(this instanceof Vue)) {
-			warn('Vue is XXX');
-		}
-		this._init(options);
+// 根据vue来实现类似的构造函数 加深对源码的理解
+function Vue3(options) {
+	if (!(this instanceof Vue)) {
+		warn('Vue is XXX');
 	}
+	this._init(options);
+}
 
-	// 初始化操作 数据 属性 方法 props render 等等
-	initMixin(Vue); // 构造函数里面的_init就是在这里面实现
-	stateMixin(Vue);
-	eventMixin(Vue);
-	lifecycleMixin(Vue);
-	renderMixin(Vue);
-    
+// 初始化操作 数据 属性 方法 props render 等等
+initMixin(Vue); // 构造函数里面的_init就是在这里面实现
+stateMixin(Vue);
+eventMixin(Vue);
+lifecycleMixin(Vue);
+renderMixin(Vue);    
 ```
 
 

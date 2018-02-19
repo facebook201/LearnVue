@@ -6,13 +6,12 @@
 </head>
 <body>
 	<div id="app">
-		<child></child>
-		<span @click="add" ref="add">添加</span>
+		<span>添加</span>
 		<ul>
 			<li v-for="(item, index) in array">{{index + 1}}：<input type="text" v-model="item.value"></li>
 		</ul>
 		{{message}}
-		<span @click="print">打印</span>
+		<span>打印</span>
 	</div>
 <script src="./vue.js"></script>
 <script src="./vt.js"></script>
