@@ -980,12 +980,12 @@ function defineReactive$$1 (
   var setter = property && property.set;
 
   var childOb = !shallow && observe(val);
-	console.log(childOb);
   Object.defineProperty(obj, key, {
     enumerable: true,
     configurable: true,
     get: function reactiveGetter () {
       var value = getter ? getter.call(obj) : val;
+			// Dep.target 表示是否收集依赖完毕
       if (Dep.target) {
 				// 通过标志来判断是否可以收集依赖
         dep.depend();
@@ -2226,6 +2226,7 @@ function updateComponentListeners (
 function eventsMixin (Vue) {
   var hookRE = /^hook:/;
   Vue.prototype.$on = function (event, fn) {
+		console.log(event, fn);
     var this$1 = this;
 
     var vm = this;
@@ -2294,6 +2295,8 @@ function eventsMixin (Vue) {
   };
 
   Vue.prototype.$emit = function (event) {
+		debugger;
+		console.log(event);
     var vm = this;
     {
       var lowerCaseEvent = event.toLowerCase();
