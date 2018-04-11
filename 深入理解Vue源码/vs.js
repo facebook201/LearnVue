@@ -1,34 +1,61 @@
 ;(function(win, doc){ 'use strict';
 
+// 注册一个组件
+Vue.component('child', {
+  template: '<div>I am the {{name}}</div>',
+  data: function() {
+    return {
+      name: 'child'
+    }
+  }
+});
+
 var vm = new Vue({
   el: '#app',
   data: {
     arr: [1, 2, 3],
     name: 'zhangsan'
   },
+  computed: {
+    time() {
+      return Date.now();
+    },
+    total() {
+      return this.name + 'ss';
+    }
+  },
+  watch: {
+    name(newVal) {
+      console.log(newVal);
+    },
+    total(newVal) {
+      console.log(newVal);
+    }
+  },
   methods: {
     changeName() {
       this.name = '李四';
-      console.log(this.$refs.name.innerText);
     }
   }
 });
 
-// 初始化事件 on emit off once
-function initEvent(vm) {
-  // 在实例上面创建一个_events 对象 用来存放事件
-  vm._events = Object.create(null);
-  // 标志位来表明是否存在钩子 而不需要通过哈希表的方法来查找是否有钩子 这边优化性能
-  // 初始化父组件atach的事件
-  const listeners = vm.$options._parentListeners;
-  if (listeners) {
-    updateComponentListeners(vm, listeners);
+win.Vue = Vue;
+win.vm = vm;
+
+var arr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+function shuffle(arr) {
+  var length = arr.length;
+  for (var i = 0; i < length; i++) {
+      var idx = Math.floor(Math.random() * (length - i));
+      var temp = arr[idx];
+      arr[idx] = arr[length - i - 1];
+      arr[length - i - 1] = temp;
   }
+  return arr;
 }
 
-Vue.use(Vuex);
-win.Vue = Vue;
+console.log(shuffle(arr));
 
-// 异步更新
 
 }(this, document, Vue));

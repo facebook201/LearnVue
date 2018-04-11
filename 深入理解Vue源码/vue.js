@@ -3234,10 +3234,10 @@ function initComputed (vm, computed) {
     }
     // create internal watcher for the computed property.
     watchers[key] = new Watcher(vm, getter, noop, computedWatcherOptions);
-
     // component-defined computed properties are already defined on the
     // component prototype. We only need to define computed properties defined
     // at instantiation here.
+
     if (!(key in vm)) {
       defineComputed(vm, key, userDef);
     } else {
@@ -3268,7 +3268,9 @@ function defineComputed (target, key, userDef) {
 }
 
 function createComputedGetter (key) {
+	console.log(key);
   return function computedGetter () {
+		console.log(this);
     var watcher = this._computedWatchers && this._computedWatchers[key];
     if (watcher) {
       if (watcher.dirty) {
