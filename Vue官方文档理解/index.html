@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Vue 测试实例 - 单个插槽</title>
+    <script src="https://cdn.bootcss.com/vue/2.5.6/vue.min.js"></script>
+</head>
+
+<body>
+
+    <div id="example">
+        <div>
+            <h1>我是父组件的标题</h1>
+            <my-component>
+                <p>这是一些初始内容</p>
+                <p>这是更多的初始内容</p>
+            </my-component>
+        </div>
+    </div>
+
+    <script>
+        var childNode = {
+            // <  slot > 时， 父组件的其他内容不会显示， 当有 <
+            //   slot > 时， 要是父组件中的内容不为空， <
+            //   slot >
+            //中的内容就不会显示 
+            template: `
+                <div>
+                <h2> 我是子组件的标题 </h2>
+                
+                <div>`,
+        }; // 创建根实例 
+        new Vue({
+            el: '#example',
+            components: {
+                'my-component': childNode
+            }
+        });
+    </script>
+</body>
