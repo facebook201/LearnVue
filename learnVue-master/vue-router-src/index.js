@@ -20,15 +20,16 @@ export default class VueRouter {
   static install: () => void;
   static version: string;
 
+/* 2018/07/29开始阅读 */
   app: any;
   apps: Array<any>;
   ready: boolean;
   readyCbs: Array<Function>;
   options: RouterOptions;
-  mode: string;
+  mode: string; // 模式 history 和 hash两种模式 默认支持hash
   history: HashHistory | HTML5History | AbstractHistory;
   matcher: Matcher;
-  fallback: boolean;
+  fallback: boolean; // 是否支持history模式 不支持会回滚到hash模式
   beforeHooks: Array<?NavigationGuard>;
   resolveHooks: Array<?NavigationGuard>;
   afterHooks: Array<?AfterNavigationHook>;
@@ -43,7 +44,7 @@ export default class VueRouter {
     this.afterHooks = []
     this.matcher = createMatcher(options.routes || [], this)
 
-    let mode = options.mode || 'hash'
+    let mode = options.mode || 'hash' // 默认是hash模式
     this.fallback = mode === 'history' && !supportsPushState && options.fallback !== false
     if (this.fallback) {
       mode = 'hash'
