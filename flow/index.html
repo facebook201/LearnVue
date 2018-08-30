@@ -5,13 +5,45 @@
     <title>Document</title>
     <script src="https://cdn.bootcss.com/zepto/1.2.0/zepto.js"></script>
     <script src="./vue.js"></script>
+    <script src="./vuex.js"></script>
 </head>
 
 <body>
     <div id="app">
         <p>计算属性</p>
-        {{computedValue}}
     </div>
-    <script src="./src/js.js"></script>
+    <script>
+      Vue.use(Vuex);
+
+      const moduleA =  {
+        state: {
+          name: 'zhansgan',
+          age: 23
+        }
+      };
+
+      const moduleB =  {
+        state: {
+          name: 'lisi',
+          age: 24
+        }
+      };
+
+      var store = new Vuex.Store({
+        modules: {
+          a: moduleA,
+          b: moduleB
+        }
+      });
+
+      var vm = new Vue({
+        el: '#app',
+        data: {
+          name: '1'
+        },
+        store: store
+      });
+    </script>
+    <!-- <script src="./src/js.js"></script> -->
 </body>
 </html>

@@ -1,18 +1,27 @@
 ;(function(win, doc) {
 
   // @flow
-  function Vue$1 (options: Object){
-    if (!this instanceof Vue$1) {
-      this._init(options);
-    }
+  function Vue (options: Object){
+    this._init(options);
   }
-
-  Vue$1.prototype.init = function(opt: Object) {
+  Vue.prototype._init = function(opt? : Object) {
     const vm = this;
-    vm._data = vm.opt || {};
-    observer(vm._data);
+    vm.$options = vm._options = opt;
+    initState(vm);
   }
 
+  function initState(vm) {
+    vm._watcher = [];
+    const opt = vm.$options;
+    if (opt.data) initData(vm);
+  }
+
+  function initData(vm) {
+    let data = vm.$options.data;
+    data = vm._data = data || {};
+    debugger;
+    observer(data);
+  }
 
   function observer(value: Object) {
     if (!value || typeof value !== 'object') {
@@ -24,7 +33,7 @@
     }
   }
 
-  function defineReactive(data: Object, key: string, value: any, showdan? : number) {
+  function defineReactive(data: Object, key: string, value: any) {
     Object.defineProperty(data, key, {
       configurable: true,
       enumerable: true,
@@ -42,15 +51,21 @@
     console.log(newVal + '改变更新视图');
   }
 
-  let vm = new Vue$1({
+  let vm = new Vue({
     data: {
       name: 'syo',
       age: 24
     }
   });
 
-  console.log(vm);
+  vm._data.name = 'zhangsan';
 
-
+  // 父节点
+  let obj = {
+    attr: 'obj'
+    childObj: {
+      attr: 'objchild1'
+    }
+  };
 
 }(this, document));

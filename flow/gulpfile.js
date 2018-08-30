@@ -6,3 +6,10 @@ gulp.task('default', function(){
       .pipe(babel())
       .pipe(gulp.dest('src'));
 });
+
+gulp.task('watch', function(){
+  console.log('文件改变了');
+  return gulp.src('./lib/*.js')
+      .pipe(babel())
+      .pipe(gulp.dest('src'));
+});

@@ -995,7 +995,6 @@
      */
     var Observer = function Observer(value) {
         this.value = value;
-        console.log(this.value, 111);
         this.dep = new Dep();
         this.vmCount = 0;
         def(value, '__ob__', this);
@@ -1075,7 +1074,6 @@
             !value._isVue
         ) {
             ob = new Observer(value);
-            console.log(ob);
         }
         if (asRootData && ob) {
             ob.vmCount++;
@@ -3281,7 +3279,6 @@
         var props = vm.$options.props;
         var methods = vm.$options.methods;
         var i = keys.length;
-        console.log(keys);
         while (i--) {
             var key = keys[i]; {
                 if (methods && hasOwn(methods, key)) {

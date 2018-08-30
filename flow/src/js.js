@@ -1,16 +1,26 @@
 ;(function (win, doc) {
 
-  function Vue$1(options) {
-    if (!this instanceof Vue$1) {
-      this._init(options);
-    }
+  function Vue(options) {
+    this._init(options);
+  }
+  Vue.prototype._init = function (opt) {
+    const vm = this;
+    vm.$options = vm._options = opt;
+    initState(vm);
+  };
+
+  function initState(vm) {
+    vm._watcher = [];
+    const opt = vm.$options;
+    if (opt.data) initData(vm);
   }
 
-  Vue$1.prototype.init = function (opt) {
-    const vm = this;
-    vm._data = vm.opt || {};
-    observer(vm._data);
-  };
+  function initData(vm) {
+    let data = vm.$options.data;
+    data = vm._data = data || {};
+    debugger;
+    observer(data);
+  }
 
   function observer(value) {
     if (!value || typeof value !== 'object') {
@@ -23,6 +33,7 @@
   }
 
   function defineReactive(data, key, value) {
+    console.log(data, key, value);
     Object.defineProperty(data, key, {
       configurable: true,
       enumerable: true,
@@ -40,12 +51,12 @@
     console.log(newVal + '改变更新视图');
   }
 
-  let vm = new Vue$1({
+  let vm = new Vue({
     data: {
       name: 'syo',
       age: 24
     }
   });
 
-  console.log(vm._data);
+  vm._data.name = 'zhangsan';
 })(this, document);
