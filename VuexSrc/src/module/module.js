@@ -8,7 +8,6 @@ export default class Module {
     // Store some children item
     this._children = Object.create(null)
     // Store the origin module object which passed by programmer
-    console.log(rawModule);
     this._rawModule = rawModule
     const rawState = rawModule.state
 

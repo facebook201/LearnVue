@@ -26,15 +26,22 @@ export class Store {
     } = options
 
     // store internal state
+    // 表示提交状态 作用是保证对Vuex中state的修改只能在mutation的回调函数 而不能在外部随意修改state
     this._committing = false
+    // 存放所有的action
     this._actions = Object.create(null)
     this._actionSubscribers = []
+    // 存放所有的mutations
     this._mutations = Object.create(null)
+    // 存放getters
     this._wrappedGetters = Object.create(null)
-    // ModuleCollection 是用来收集module的
+    // 存放用户所有的modules
     this._modules = new ModuleCollection(options)
+    // 存放module 和 namespace的对应关系
     this._modulesNamespaceMap = Object.create(null)
+    // 存放所有对mutation变化的订阅者
     this._subscribers = []
+    // 一个vue的实例 利用vue的$watch来观测变化
     this._watcherVM = new Vue()
 
     // bind commit and dispatch to self
@@ -233,8 +240,10 @@ function resetStore (store, hot) {
   const state = store.state
   // init all modules
   installModule(store, state, [], store._modules.root, true)
+
   // reset vm
   resetStoreVM(store, state, hot)
+
 }
 
 // 传入 store 和 state
@@ -245,10 +254,18 @@ function resetStoreVM (store, state, hot) {
   // bind store public getters
   store.getters = {}
   const wrappedGetters = store._wrappedGetters
+  // 定义一个computed 用来拼接一个能被Vue识别的计算属性
   const computed = {}
+  /*
+   export function forEachValue (obj, fn) {
+     Object.keys(obj).forEach(key => fn(obj[key], key))
+   }
+  */
   forEachValue(wrappedGetters, (fn, key) => {
     // use computed to leverage its lazy-caching mechanism
     computed[key] = () => fn(store)
+
+    // 对getters的get方法重写 如果访问了geter.count 那么就返回this.$store._vm.count
     Object.defineProperty(store.getters, key, {
       get: () => store._vm[key],
       enumerable: true // for local getters
@@ -458,7 +475,7 @@ function registerGetter (store, type, rawGetter, local) {
 function enableStrictMode (store) {
   store._vm.$watch(function () { return this._data.$$state }, () => {
     if (process.env.NODE_ENV !== 'production') {
-      assert(store._committing, `do not mutate vuex store state outside mutation handlers.`)
+      assert(`store`._committing, `do not mutate vuex store state outside mutation handlers.`)
     }
   }, { deep: true, sync: true })
 }
@@ -493,7 +510,7 @@ export function install (_Vue) {
     }
     return
   }
-  // 保存Vue 执行applyMixin 混人Vue的beforeCreate中
+  // 保存Vue 执行 混人Vue的beforeCreate中
   Vue = _Vue
   applyMixin(Vue)
 }

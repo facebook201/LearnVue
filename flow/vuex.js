@@ -103,6 +103,7 @@ function assert (condition, msg) {
   if (!condition) { throw new Error(("[vuex] " + msg)) }
 }
 
+// 传入 options false 无法回值
 var Module = function Module (rawModule, runtime) {
   this.runtime = runtime;
   this._children = Object.create(null);
@@ -166,8 +167,10 @@ Module.prototype.forEachMutation = function forEachMutation (fn) {
 
 Object.defineProperties( Module.prototype, prototypeAccessors$1 );
 
+// 传options
 var ModuleCollection = function ModuleCollection (rawRootModule) {
   // register root module (Vuex.Store options)
+	//
   this.register([], rawRootModule, false);
 };
 
@@ -189,6 +192,7 @@ ModuleCollection.prototype.update = function update$1 (rawRootModule) {
   update([], this.root, rawRootModule);
 };
 
+// 传 [] options false
 ModuleCollection.prototype.register = function register (path, rawModule, runtime) {
     var this$1 = this;
     if ( runtime === void 0 ) runtime = true;
@@ -196,7 +200,8 @@ ModuleCollection.prototype.register = function register (path, rawModule, runtim
   {
     assertRawModule(path, rawModule);
   }
-
+	console.log(path, '203');
+	// options false newModule是一个module对象 里面有options state 等等
   var newModule = new Module(rawModule, runtime);
   if (path.length === 0) {
     this.root = newModule;
@@ -357,9 +362,8 @@ var Store = function Store (options) {
 		  age: 23
 	  }
 	};
-	*/
+	*/ // stote state [] root对象下的一些属性
   installModule(this, state, [], this._modules.root);
-
   // initialize the store vm, which is responsible for the reactivity
   // (also registers _wrappedGetters as computed properties)
 	//store 和 state
@@ -536,6 +540,7 @@ function resetStore (store, hot) {
   var state = store.state;
   // init all modules
   installModule(store, state, [], store._modules.root, true);
+
   // reset vm
   resetStoreVM(store, state, hot);
 }
@@ -547,11 +552,10 @@ function resetStoreVM (store, state, hot) {
   store.getters = {};
   var wrappedGetters = store._wrappedGetters;
   var computed = {};
-	console.log(wrappedGetters);
   forEachValue(wrappedGetters, function (fn, key) {
-		console.log(fn, key);
     // use computed to leverage its lazy-caching mechanism
     computed[key] = function () { return fn(store); };
+		console.log(computed[key]);
     Object.defineProperty(store.getters, key, {
       get: function () { return store._vm[key]; },
       enumerable: true // for local getters
@@ -563,6 +567,7 @@ function resetStoreVM (store, state, hot) {
   // some funky global mixins
   var silent = Vue.config.silent;
   Vue.config.silent = true;
+	// 在store挂载一个_vm属性 然后把state作为Vue的对象属性值返回
   store._vm = new Vue({
     data: {
       $$state: state
@@ -588,6 +593,11 @@ function resetStoreVM (store, state, hot) {
   }
 }
 
+/**
+ * store 是传进来的参数对象
+ * rootState 是state值
+ * path 是 []
+ */
 function installModule (store, rootState, path, module, hot) {
   var isRoot = !path.length;
   var namespace = store._modules.getNamespace(path);
@@ -621,8 +631,18 @@ function installModule (store, rootState, path, module, hot) {
 
   module.forEachGetter(function (getter, key) {
     var namespacedType = namespace + key;
+		// 参数对象 getter
+		console.log(getter);
     registerGetter(store, namespacedType, getter, local);
   });
+
+
+	// this._rawModule 是 store的options参数 里面包含了state getter
+	// Module.prototype.forEachGetter = function forEachGetter (fn) {
+	//   if (this._rawModule.getters) {
+	//     forEachValue(this._rawModule.getters, fn);
+	//   }
+	// };
 
   module.forEachChild(function (child, key) {
     installModule(store, rootState, path.concat(key), child, hot);
@@ -743,14 +763,25 @@ function registerAction (store, type, handler, local) {
   });
 }
 
+
 function registerGetter (store, type, rawGetter, local) {
+	console.log(store);
+	// store._wrappedGetters 初始化是空对象 用来保存getters的
   if (store._wrappedGetters[type]) {
     {
       console.error(("[vuex] duplicate getter key: " + type));
     }
     return
   }
+	// store._wrappedGetters = {}
+	// store._wrappedGetters.getName = ();
+	// Module.prototype.forEachGetter = function forEachGetter (fn) {
+	//   if (this._rawModule.getters) {
+	//     forEachValue(this._rawModule.getters, fn);
+	//   }
+	// };
   store._wrappedGetters[type] = function wrappedGetter (store) {
+		console.log(rawGetter);
     return rawGetter(
       local.state, // local state
       local.getters, // local getters

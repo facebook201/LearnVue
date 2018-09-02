@@ -14,25 +14,15 @@
     </div>
     <script>
       Vue.use(Vuex);
-
-      const moduleA =  {
-        state: {
-          name: 'zhansgan',
-          age: 23
-        }
-      };
-
-      const moduleB =  {
-        state: {
-          name: 'lisi',
-          age: 24
-        }
-      };
-
       var store = new Vuex.Store({
-        modules: {
-          a: moduleA,
-          b: moduleB
+        state: {
+          name: '张三',
+          age: 13
+        },
+        getters: {
+          getName(state) {
+            return state.name;
+          }
         }
       });
 
@@ -45,5 +35,8 @@
       });
     </script>
     <!-- <script src="./src/js.js"></script> -->
+
+    <script>
+    </script>
 </body>
 </html>
