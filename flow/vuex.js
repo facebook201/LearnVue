@@ -632,7 +632,6 @@ function installModule (store, rootState, path, module, hot) {
   module.forEachGetter(function (getter, key) {
     var namespacedType = namespace + key;
 		// 参数对象 getter
-		console.log(getter);
     registerGetter(store, namespacedType, getter, local);
   });
 
@@ -765,7 +764,6 @@ function registerAction (store, type, handler, local) {
 
 
 function registerGetter (store, type, rawGetter, local) {
-	console.log(store);
 	// store._wrappedGetters 初始化是空对象 用来保存getters的
   if (store._wrappedGetters[type]) {
     {
@@ -781,7 +779,7 @@ function registerGetter (store, type, rawGetter, local) {
 	//   }
 	// };
   store._wrappedGetters[type] = function wrappedGetter (store) {
-		console.log(rawGetter);
+		// 返回getters里面的属性对应的函数 可以传state getters 两个参数
     return rawGetter(
       local.state, // local state
       local.getters, // local getters

@@ -35,7 +35,17 @@
       });
     </script>
     <!-- <script src="./src/js.js"></script> -->
+    <script>
+      function getName(state) {
+        return state.name
+      }
+      
+      console.log(getName({name: 2}));
+      store_wrappedGetters[type] = function wrappedGetter(store) {
+        return getName();
+      }
 
+    </script>
     <script>
     </script>
 </body>

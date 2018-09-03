@@ -94,3 +94,8 @@ function wrapGetters (store, moduleGetters) {
 }
 ```
 
+
+
+#### resetStoreVM
+
+在
