@@ -17,5 +17,6 @@ VueRouter 是 vue官方的路由管理器。 包含的功能
 
 ### DOC 目录
 
-* [前端路由和VueRouter原理]()
-* 
+* [前端路由和VueRouter原理](https://github.com/facebook201/LearnVue/blob/master/%E5%85%A8%E5%AE%B6%E6%A1%B6%E6%BA%90%E7%A0%81/VueRouter/doc/%E5%89%8D%E7%AB%AF%E8%B7%AF%E7%94%B1%E5%92%8CVueRouter%E5%8E%9F%E7%90%86.md)
+* [路由注册与安装]()
+
