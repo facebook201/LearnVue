@@ -61,11 +61,17 @@ export class Observer {
      */
     def(value, '__ob__', this)
     // 接着处理纯对象 数据和纯对象的处理方法是不一样的
+    // 数组有很多变异的方法 可以改变自身 当调用这些方法的时候需要出发依赖 这时候要做出反应
     if (Array.isArray(value)) {
+      // 因为 __proto__ 是在IE11 才支持的东西 
+      // 所以在IE11下面 通过直接定义一个方法来覆盖 修改目标对象或数组
       const augment = hasProto
         ? protoAugment
         : copyAugment
+      // value.__proto__ = arrayMethods.__proto__
+      // 第一个参数是实例本身 第二个参数是代理原型 
       augment(value, arrayMethods, arrayKeys)
+      // 上面的代码是为了把数组实例与代理原型或代理原型中定义的函数联系起 从而拦截数组变异方法
       this.observeArray(value)
     } else {
       this.walk(value)
@@ -87,6 +93,7 @@ export class Observer {
 
   /**
    * Observe a list of Array items.
+   * 把数组遍历 如果数组里面还有数组或者对象 然后通过observe 变成响应式
    */
   observeArray (items: Array<any>) {
     for (let i = 0, l = items.length; i < l; i++) {
@@ -100,9 +107,11 @@ export class Observer {
 /**
  * Augment an target Object or Array by intercepting
  * the prototype chain using __proto__
+ * 通过设置数组实例的 __proto__ 属性 代理指向一个代理原型 从而做到拦截
  */
 function protoAugment (target, src: Object, keys: any) {
   /* eslint-disable no-proto */
+  // 将数组实例的原型指向代理原型 arrayMethods
   target.__proto__ = src
   /* eslint-enable no-proto */
 }
@@ -110,11 +119,15 @@ function protoAugment (target, src: Object, keys: any) {
 /**
  * Augment an target Object or Array by defining
  * hidden properties.
+ * 
  */
 /* istanbul ignore next */
+// 实例本身 [] src 第二个参数是代理原型 
 function copyAugment (target: Object, src: Object, keys: Array<string>) {
   for (let i = 0, l = keys.length; i < l; i++) {
+    // key 是实例方法
     const key = keys[i]
+    // target 数组实例 key 是方法名 src[key] 返回的方法结果值
     def(target, key, src[key])
   }
 }
@@ -189,7 +202,11 @@ export function defineReactive (
   const getter = property && property.get
   const setter = property && property.set
 
-  // 
+  // 开始的版本是 三个参数 但是现在 defineReactive 只有两个参数 只有当满足下面的条件 val才会被赋值 否则就是undefined
+  // 当属性原本存在getter拦截器的时候不会深度观测 
+  // 第一 当属性原本存在getter时 在深度观测之前不会取值
+  // 第二 在深度观测之前不取值是因为属性原本由getter用户定义 避免发生不可预见的问题
+
   if ((!getter || setter) && arguments.length === 2) {
     val = obj[key]
   }
@@ -218,13 +235,14 @@ export function defineReactive (
       const value = getter ? getter.call(obj) : val
       // 下面的代码都是收集依赖和子对象收集依赖
       // Dep.target 保存的是要收集的依赖 如果存在就表示有依赖要收集
-      console.log(Dep.target);
       if (Dep.target) {
         // 开始进行依赖收集
         dep.depend()
         if (childOb) {
-          // 子对象进行依赖收集 
+          // 子对象进行依赖收集 子对象的框和上面的框作用不同 触发时机也不同
+          // childOb.dep 是第二个框 child.dep === data.a.__ob__.dep 
           childOb.dep.depend()
+          // 纯对象和数组的处理方式是不同的
           if (Array.isArray(value)) {
             dependArray(value)
           }
@@ -232,22 +250,29 @@ export function defineReactive (
       }
       return value
     },
+    // set主要做两件事 一是正确的位属性设置新值 二是能够触发相应的依赖
     set: function reactiveSetter (newVal) {
+      // 取得原有的值来比较
       const value = getter ? getter.call(obj) : val
       /* eslint-disable no-self-compare */
+      // 新老值对比 判断NaN 
       if (newVal === value || (newVal !== newVal && value !== value)) {
         return
       }
       /* eslint-enable no-self-compare */
+      // customSetter 打印辅助信息 第四个参数
       if (process.env.NODE_ENV !== 'production' && customSetter) {
         customSetter()
       }
+      // 判断是否存在setter 如果有就执行setter函数 没有就直接赋值
       if (setter) {
         setter.call(obj, newVal)
       } else {
         val = newVal
       }
+      // 如果新赋值的是数组或者纯对象 那么他们是没有被观测的 所以需要对新值重新观测 保证响应式
       childOb = !shallow && observe(newVal)
+      // dep对象通知所有的观察者
       dep.notify()
     }
   })
@@ -258,11 +283,10 @@ export function defineReactive (
  * triggers change notification if the property doesn't
  * already exist.
  */
+
 export function set (target: Array<any> | Object, key: any, val: any): any {
-  if (process.env.NODE_ENV !== 'production' &&
-    (isUndef(target) || isPrimitive(target))
-  ) {
-    warn(`Cannot set reactive property on undefined, null, or primitive value: ${(target: any)}`)
+  if (process.env.NODE_ENV !== 'production' &&(isUndef(target) || isPrimitive(target))) {
+    // warn(Cannot set reactive property on undefined, null, or primitive value: ${(target: any)})
   }
   if (Array.isArray(target) && isValidArrayIndex(key)) {
     target.length = Math.max(target.length, key)
@@ -275,9 +299,9 @@ export function set (target: Array<any> | Object, key: any, val: any): any {
   }
   const ob = (target: any).__ob__
   if (target._isVue || (ob && ob.vmCount)) {
-    process.env.NODE_ENV !== 'production' && warn(
-      'Avoid adding reactive properties to a Vue instance or its root $data ' +
-      'at runtime - declare it upfront in the data option.'
+    // process.env.NODE_ENV !== 'production' && warn(
+      // 'Avoid adding reactive properties to a Vue instance or its root $data ' +
+      // 'at runtime - declare it upfront in the data option.'
     )
     return val
   }
@@ -297,7 +321,7 @@ export function del (target: Array<any> | Object, key: any) {
   if (process.env.NODE_ENV !== 'production' &&
     (isUndef(target) || isPrimitive(target))
   ) {
-    warn(`Cannot delete reactive property on undefined, null, or primitive value: ${(target: any)}`)
+    // warn(`Cannot delete reactive property on undefined, null, or primitive value: ${(target: any)}`)
   }
   if (Array.isArray(target) && isValidArrayIndex(key)) {
     target.splice(key, 1)
@@ -305,10 +329,10 @@ export function del (target: Array<any> | Object, key: any) {
   }
   const ob = (target: any).__ob__
   if (target._isVue || (ob && ob.vmCount)) {
-    process.env.NODE_ENV !== 'production' && warn(
-      'Avoid deleting properties on a Vue instance or its root $data ' +
-      '- just set it to null.'
-    )
+    // process.env.NODE_ENV !== 'production' && warn(
+      // 'Avoid deleting properties on a Vue instance or its root $data ' +
+      // '- just set it to null.'
+    // )
     return
   }
   if (!hasOwn(target, key)) {
@@ -325,6 +349,8 @@ export function del (target: Array<any> | Object, key: any) {
  * Collect dependencies on array elements when the array is touched, since
  * we cannot intercept array element access like property getters.
  */
+
+// value [] 
 function dependArray (value: Array<any>) {
   for (let e, i = 0, l = value.length; i < l; i++) {
     e = value[i]
