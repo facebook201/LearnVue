@@ -54,6 +54,7 @@ export function initMixin (Vue: Class<Component>) {
     initRender(vm)
     callHook(vm, 'beforeCreate')
     initInjections(vm) // resolve injections before data/props
+    // 在initMixin 里面 传入vm
     initState(vm)
     initProvide(vm) // resolve provide after data/props
     callHook(vm, 'created')

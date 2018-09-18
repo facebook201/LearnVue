@@ -35,6 +35,9 @@ const sharedPropertyDefinition = {
   set: noop
 }
 
+// 实现代理访问
+// [name, age] 
+// proxy(vm, '_data', key);
 export function proxy (target: Object, sourceKey: string, key: string) {
   sharedPropertyDefinition.get = function proxyGetter () {
     return this[sourceKey][key]
@@ -43,6 +46,9 @@ export function proxy (target: Object, sourceKey: string, key: string) {
     this[sourceKey][key] = val
   }
   Object.defineProperty(target, key, sharedPropertyDefinition)
+  // Object.defineProperty(vm, name, {
+  //   get() { return this._data.name }    
+  // }):
 }
 
 /**
@@ -54,7 +60,7 @@ export function initState (vm: Component) {
   // 看看初始化 initProps
   if (opts.props) initProps(vm, opts.props)
   if (opts.methods) initMethods(vm, opts.methods)
-  // 如果有data选项
+  // 如果有data选项 就初始化data
   if (opts.data) {
     initData(vm)
   } else {
@@ -65,6 +71,7 @@ export function initState (vm: Component) {
     initWatch(vm, opts.watch)
   }
 }
+
 
 function initProps (vm: Component, propsOptions: Object) {
   const propsData = vm.$options.propsData || {}
@@ -118,28 +125,38 @@ function initProps (vm: Component, propsOptions: Object) {
   toggleObserving(true)
 }
 
-function initData (vm: Component) {
-  // 缓存data数据
-  let data = vm.$options.data
-  // 检测data类型 是跟实例的还是子实例的data
+// 初始化data
+function initData(vm: Component) {
+  // 缓存data
+  let data = vm.$options.data;
   data = vm._data = typeof data === 'function'
-    ? getData(data, vm)
-    : data || {}
+    ? getData(data)
+    : data || {};
+
+  // 判断是不是纯粹的javascript对象
   if (!isPlainObject(data)) {
-    data = {}
+    data = {};
     process.env.NODE_ENV !== 'production' && warn(
       'data functions should return an object:\n' +
       'https://vuejs.org/v2/guide/components.html#data-Must-Be-a-Function',
       vm
     )
   }
-  // proxy data on instance
+  /*
+  data() {
+    name: 'zhangsan',
+    age: 12
+  }
+  */
+
+  // 代理data 到实例上
   const keys = Object.keys(data)
   const props = vm.$options.props
   const methods = vm.$options.methods
   let i = keys.length
   while (i--) {
     const key = keys[i]
+    // 这里是判断data的属性和methods属性不能重名 以data优先
     if (process.env.NODE_ENV !== 'production') {
       if (methods && hasOwn(methods, key)) {
         warn(
@@ -148,21 +165,26 @@ function initData (vm: Component) {
         )
       }
     }
+    // 保证data中的key不与props中的key重复 props优先 有冲突就warning
+    // 这里就有个优先级 props > data > methods
     if (props && hasOwn(props, key)) {
       process.env.NODE_ENV !== 'production' && warn(
         `The data property "${key}" is already declared as a prop. ` +
         `Use prop default value instead.`,
         vm
       )
+      // 
     } else if (!isReserved(key)) {
-      // 代理_data 的数据到vm上
+      // 实例对象的代理访问
       proxy(vm, `_data`, key)
     }
   }
-  // observe data
+  // observe 将data数据 转换成响应式的 这才是响应式的开始
   observe(data, true /* asRootData */)
 }
 
+// 第一次参数 data是一个函数 vm是实例对象
+// 其实就是调用 vm的data对象
 export function getData (data: Function, vm: Component): any {
   // #7573 disable dep collection when invoking data getters
   pushTarget()

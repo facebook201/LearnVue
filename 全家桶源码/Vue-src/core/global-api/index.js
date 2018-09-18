@@ -28,6 +28,7 @@ export function initGlobalAPI (Vue: GlobalAPI) {
       )
     }
   }
+  // 在Vue构造函数上添加config属性 这也是一个只读属性
   Object.defineProperty(Vue, 'config', configDef)
 
   // exposed util methods.
@@ -40,6 +41,7 @@ export function initGlobalAPI (Vue: GlobalAPI) {
     defineReactive
   }
 
+  // 添加四个属性 在响应式对象中添加一个属性 确保新属性也是响应式的 且触发视图更新
   Vue.set = set
   Vue.delete = del
   Vue.nextTick = nextTick
@@ -54,6 +56,18 @@ export function initGlobalAPI (Vue: GlobalAPI) {
   Vue.options._base = Vue
 
   extend(Vue.options.components, builtInComponents)
+
+  // 最后 Vue.options
+  /*
+  Vue.options = {
+      components: {
+        KeepAlive
+      },
+      directives: Object.create(null),
+      filters: Object.create(null),
+      _base: Vue
+  };
+  */
 
   initUse(Vue)
   initMixin(Vue)
