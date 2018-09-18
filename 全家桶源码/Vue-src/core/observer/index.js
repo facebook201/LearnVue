@@ -350,7 +350,18 @@ export function del (target: Array<any> | Object, key: any) {
  * we cannot intercept array element access like property getters.
  */
 
-// value [] 
+/**
+  {
+    arr: [
+      {
+        a: 1
+        __ob__
+      }
+    ]
+  }
+ */ 
+ // value arr [] 递归调用 来收集
+ // 数组的索引不是响应式的 
 function dependArray (value: Array<any>) {
   for (let e, i = 0, l = value.length; i < l; i++) {
     e = value[i]
