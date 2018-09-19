@@ -284,20 +284,34 @@ export function defineReactive (
  * already exist.
  */
 
+// set 接收三个参数 操作的对象  对象的属性  对象的属性值
 export function set (target: Array<any> | Object, key: any, val: any): any {
   if (process.env.NODE_ENV !== 'production' &&(isUndef(target) || isPrimitive(target))) {
     // warn(Cannot set reactive property on undefined, null, or primitive value: ${(target: any)})
   }
+  // 如果是一个数组  并且key 是一个有效的数组索引 
   if (Array.isArray(target) && isValidArrayIndex(key)) {
+    // 注意修改数组的长度 否则当要设置元素的索引大于数组长度时 splice无效
     target.length = Math.max(target.length, key)
+    // 调用方法来替换val数组
     target.splice(key, 1, val)
     return val
   }
+  // 如果是一个纯对象 当给纯对象设置属性的时候 假设存在对象上  直接赋值就行 因为已经存在的属性是响应式了
+  // 而且不能在原型Object.prototype 对象上
+  // 如果使用hasOwnPrototype 就不能接受接受原型链上的属性了 但是同时不能接受Object.prototype 可以看issues 6845
   if (key in target && !(key in Object.prototype)) {
     target[key] = val
     return val
   }
+  // 下面的代码就是给对象添加一个全新的属性 
+  // 给定义 ob 常量。 它是数据对象 __ob__ 属性的引用。 
+  
   const ob = (target: any).__ob__
+
+  // ob.vmCount > 0 才行  因为 使用set给根数据对象添加属性时 是不能被允许的。 
+  // 因为根数据对象本身不是响应式的
+  
   if (target._isVue || (ob && ob.vmCount)) {
     // process.env.NODE_ENV !== 'production' && warn(
       // 'Avoid adding reactive properties to a Vue instance or its root $data ' +
@@ -305,10 +319,14 @@ export function set (target: Array<any> | Object, key: any, val: any): any {
     )
     return val
   }
+  
+  // 如果不存在 __ob__ target本身如果不是响应式的 直接赋值
+
   if (!ob) {
     target[key] = val
     return val
   }
+  // 保证新添加的属性是响应式的 并且触发响应更新
   defineReactive(ob.value, key, val)
   ob.dep.notify()
   return val
@@ -317,12 +335,16 @@ export function set (target: Array<any> | Object, key: any, val: any): any {
 /**
  * Delete a property and trigger change if necessary.
  */
+
+// 
+
 export function del (target: Array<any> | Object, key: any) {
   if (process.env.NODE_ENV !== 'production' &&
     (isUndef(target) || isPrimitive(target))
   ) {
     // warn(`Cannot delete reactive property on undefined, null, or primitive value: ${(target: any)}`)
   }
+  // 如果是数组 直接splice删除即可
   if (Array.isArray(target) && isValidArrayIndex(key)) {
     target.splice(key, 1)
     return
@@ -335,13 +357,19 @@ export function del (target: Array<any> | Object, key: any) {
     // )
     return
   }
+  // 首先判断是否是自己的属性 如果不在该对象上 自然什么都不用做
   if (!hasOwn(target, key)) {
     return
   }
+  // 如果存在 删除即可 
   delete target[key]
+  
+  // 判断是否有 __ob__ 如果没有表示不是响应式的
   if (!ob) {
     return
   }
+  
+  // 最后触发响应式即可
   ob.dep.notify()
 }
 
