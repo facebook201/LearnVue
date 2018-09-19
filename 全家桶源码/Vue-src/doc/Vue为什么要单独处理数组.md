@@ -4,7 +4,7 @@
 
 首先贴一张官网的图。
 
-![border]()
+![border](https://github.com/facebook201/LearnVue/blob/master/%E5%85%A8%E5%AE%B6%E6%A1%B6%E6%BA%90%E7%A0%81/Vue-src/img/arr.png)
 
 JS 本身是可以支持响应式数组的。但是它的length属性值不能的。因为它自己本身的configurable是false。是无法配置的。但是数组的索引支持响应式。那么为什么Vue通过变相通过方法处理数组呢。
 
