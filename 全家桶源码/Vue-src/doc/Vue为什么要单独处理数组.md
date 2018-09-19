@@ -30,5 +30,8 @@ JS 本身是可以支持响应式数组的。但是它的length属性值不能�
     }
 ```
 
-通过拦截重写数组的方法来实现。也提供了一个set方法来实现。
+通过拦截重写数组的方法来实现。主要是新增的方法 也提供了一个set方法来实现。
+
+而且在issues上买找到尤大大的回答
+![border](https://github.com/facebook201/LearnVue/blob/master/%E5%85%A8%E5%AE%B6%E6%A1%B6%E6%BA%90%E7%A0%81/Vue-src/img/length.png)
 
