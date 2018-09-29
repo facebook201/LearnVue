@@ -67,6 +67,7 @@ if (typeof Promise !== 'undefined' && isNative(Promise)) {
     // microtask queue but the queue isn't being flushed, until the browser
     // needs to do some other work, e.g. handle a timer. Therefore we can
     // "force" the microtask queue to be flushed by adding an empty timer.
+    // 为了解决怪异问题 UIWebViews中存在很奇怪的问题。microtask没有被刷新 注册一个任务
     if (isIOS) setTimeout(noop)
   }
 } else {

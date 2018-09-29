@@ -29,3 +29,35 @@ Object.definePrototype(data, 'a', {
     console.log('读取了属性a');
   }
 });
+
+// mount函数
+Vue.prototype.$mount = function(
+  el?: string | Element,
+  hydrating?: boolean
+): Component {
+  el = el && inBrowser ? query(el) : undefined; 
+  return mountComponent(this, el, hydrating);
+}
+
+//
+export default class Watcher {
+  //...
+  // watch 的五个参数 
+  // 组件对象
+  constructor (
+    vm: Component,
+    exporFn: string | Function,
+    cb: Function,
+    options?: ?Object,
+    isRenderWathcer?: boolean
+  ) {
+    // get
+    get() {
+
+    }
+
+
+
+  }
+
+}

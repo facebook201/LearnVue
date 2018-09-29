@@ -12,11 +12,15 @@ import {
 
 export const MAX_UPDATE_COUNT = 100
 
+// 常量数组 入队就是该数组的push方法。将观察者添加到数组的尾部 入队之前有一个对变量flushing的判断
 const queue: Array<Watcher> = []
 const activatedChildren: Array<Component> = []
 let has: { [key: number]: ?true } = {}
 let circular: { [key: number]: number } = {}
 let waiting = false
+
+// flushing 是一个标志 当所有的观察者突变之后 统一跟新 这个变量表示正在执行更新 
+// 可以 if(!flushing) 知道当队列有没有执行更新才会简单的将观察者加入到队列尾部。
 let flushing = false
 let index = 0
 
@@ -127,9 +131,12 @@ function callActivatedHooks (queue) {
  * Jobs with duplicate IDs will be skipped unless it's
  * pushed when the queue is being flushed.
  */
+// 把观察者放到观察队列 
 export function queueWatcher (watcher: Watcher) {
+  // 观察者对象的唯一id
   const id = watcher.id
   if (has[id] == null) {
+    // 如果没有这个id 则标记这个id
     has[id] = true
     if (!flushing) {
       queue.push(watcher)

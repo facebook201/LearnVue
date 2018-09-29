@@ -65,7 +65,7 @@ export function initMixin (Vue: Class<Component>) {
       mark(endTag)
       measure(`vue ${vm._name} init`, startTag, endTag)
     }
-
+    // 如果存在 el参数 则 $mount 挂载到el元素上
     if (vm.$options.el) {
       vm.$mount(vm.$options.el)
     }

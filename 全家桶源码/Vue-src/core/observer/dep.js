@@ -20,16 +20,21 @@ export default class Dep {
     this.subs = []
   }
 
+  // 这里的方法才是真正用来收集依赖的方法 收集到的观察者都会被添加到subs数组中存起来
   addSub (sub: Watcher) {
     this.subs.push(sub)
   }
 
-  removeSub (sub: Watcher) {
-    remove(this.subs, sub)
-  }
+  // removeSub (sub: Watcher) {
+  //   remove(this.subs, sub)
+  // }
 
+  // 收集依赖
   depend () {
+    // 为什么这里还要做一次判断呢？
+    // 因为depend 方法还在其他地方被调用。
     if (Dep.target) {
+      // 通过Watcher的实例的方法来收集依赖
       Dep.target.addDep(this)
     }
   }
@@ -57,6 +62,7 @@ const targetStack = []
 
 export function pushTarget (_target: ?Watcher) {
   if (Dep.target) targetStack.push(Dep.target)
+  // Dep.target 是 watcher
   Dep.target = _target
 }
 

@@ -66,6 +66,7 @@ export function initState (vm: Component) {
   } else {
     observe(vm._data = {}, true /* asRootData */)
   }
+  // 初始化计算属性
   if (opts.computed) initComputed(vm, opts.computed)
   if (opts.watch && opts.watch !== nativeWatch) {
     initWatch(vm, opts.watch)
@@ -198,17 +199,25 @@ export function getData (data: Function, vm: Component): any {
   }
 }
 
+// 计算属性的观察者 标识一个观察者对象是计算属性的观察者
+// 非计算属性的观察者跟计算属性的观察者是不一样的
+
 const computedWatcherOptions = { computed: true }
 
+// 接收两个参数 Vue实例 和 计算属性选项
 function initComputed (vm: Component, computed: Object) {
   // $flow-disable-line
+  // _computedWatchers 用来存储计算属性观察者的观察者
   const watchers = vm._computedWatchers = Object.create(null)
   // computed properties are just getters during SSR
   const isSSR = isServerRendering()
 
+  // 遍历计算属性的选项对象
   for (const key in computed) {
     const userDef = computed[key]
+    // 计算属性也能存在 getter 常量始终返回的是一个函数
     const getter = typeof userDef === 'function' ? userDef : userDef.get
+    // 
     if (process.env.NODE_ENV !== 'production' && getter == null) {
       warn(
         `Getter is missing for computed property "${key}".`,
@@ -217,7 +226,10 @@ function initComputed (vm: Component, computed: Object) {
     }
 
     if (!isSSR) {
+      // 在非SSR渲染下
       // create internal watcher for the computed property.
+      // 计算属性观察者
+      // 计算属性的观察者对象跟普通属性的观察者对象不一样 这里的第四个参数是处理计算属性的观察者对象的
       watchers[key] = new Watcher(
         vm,
         getter || noop,
@@ -229,9 +241,12 @@ function initComputed (vm: Component, computed: Object) {
     // component-defined computed properties are already defined on the
     // component prototype. We only need to define computed properties defined
     // at instantiation here.
+    // 判断计算属性是否在 Vue实例里面
     if (!(key in vm)) {
+      // 如果不在就定义计算属性
       defineComputed(vm, key, userDef)
     } else if (process.env.NODE_ENV !== 'production') {
+      // data 和 props是不允许被computed 同名覆盖 
       if (key in vm.$data) {
         warn(`The computed property "${key}" is already defined in data.`, vm)
       } else if (vm.$options.props && key in vm.$options.props) {
@@ -241,13 +256,16 @@ function initComputed (vm: Component, computed: Object) {
   }
 }
 
+// target vm实例 key 计算属性的属性名称 userDef 是函数
 export function defineComputed (
   target: any,
   key: string,
   userDef: Object | Function
 ) {
+  // 在非服务端渲染的情况下 计算属性才会被缓存
   const shouldCache = !isServerRendering()
   if (typeof userDef === 'function') {
+    // 判断计算属性
     sharedPropertyDefinition.get = shouldCache
       ? createComputedGetter(key)
       : userDef
@@ -275,7 +293,9 @@ export function defineComputed (
 }
 
 function createComputedGetter (key) {
+  // 这个函数返回的是 computedGetter 计算属性的get拦截器函数 就是computedGetter
   return function computedGetter () {
+    // watcher 常量是
     const watcher = this._computedWatchers && this._computedWatchers[key]
     if (watcher) {
       watcher.depend()
@@ -373,16 +393,24 @@ export function stateMixin (Vue: Class<Component>) {
     cb: any,
     options?: Object
   ): Function {
+    // 一般第二个参数传一个函数 例如 function(newVal, val){  }
+    // 也可以穿一个对象 里面包含handler属性 属性值作为回调
     const vm: Component = this
     if (isPlainObject(cb)) {
       return createWatcher(vm, expOrFn, cb, options)
     }
+    // 如果是回调函数
     options = options || {}
     options.user = true
+    // 创建一个Watcher实例对象
     const watcher = new Watcher(vm, expOrFn, cb, options)
+    // immediate选项用来在属性或函数被侦听后立即执行回调 
+    // 如果 immediate 为真
     if (options.immediate) {
+      // watcher.value 是 watch处理之后 this.getter() 返回的值 也就是被观察属性的值
       cb.call(vm, watcher.value)
     }
+    // 返回一个函数 这个函数如果执行就解除当前观察者对属性的观察 它的原理是通过调用观察者实例对象
     return function unwatchFn () {
       watcher.teardown()
     }

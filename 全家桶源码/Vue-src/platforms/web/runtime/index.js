@@ -35,12 +35,14 @@ Vue.prototype.__patch__ = inBrowser ? patch : noop
 
 // public mount method
 // $mount 方法实现
+// 组件挂载方法
 Vue.prototype.$mount = function (
   el?: string | Element,
   hydrating?: boolean
 ): Component {
-  // 获取节点
+  // 获取DOM实例对象
   el = el && inBrowser ? query(el) : undefined
+  // 开始挂载组件
   return mountComponent(this, el, hydrating)
 }
 
