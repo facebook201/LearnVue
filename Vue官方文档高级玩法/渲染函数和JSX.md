@@ -4,8 +4,6 @@ Vue在大多数情况下推荐使用template模板来创建html。但是在一�
 
 
 
-
-
 #### 在Vue中使用jsx 如果你的render函数过于复杂 使用jsx
 
 * 安装babel插件 babel-plugin-transform-vue-jsx 然后在babelrc里面添加

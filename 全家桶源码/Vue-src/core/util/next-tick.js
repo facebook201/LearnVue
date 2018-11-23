@@ -9,9 +9,12 @@ const callbacks = []
 let pending = false
 
 function flushCallbacks () {
+  // 重置回调队列不需要等待刷新
   pending = false
   const copies = callbacks.slice(0)
+  // 清空回调队列
   callbacks.length = 0
+  // 然后开始执行回调队列的函数
   for (let i = 0; i < copies.length; i++) {
     copies[i]()
   }
@@ -90,6 +93,7 @@ export function withMacroTask (fn: Function): Function {
 
 export function nextTick (cb?: Function, ctx?: Object) {
   let _resolve
+  // 把回调函数放入一个 callbacks的数组中
   callbacks.push(() => {
     if (cb) {
       try {
@@ -101,8 +105,10 @@ export function nextTick (cb?: Function, ctx?: Object) {
       _resolve(ctx)
     }
   })
+  // pending 表示回调队列是否处于等待刷新的状态
   if (!pending) {
     pending = true
+    // 是否可以使用宏任务
     if (useMacroTask) {
       macroTimerFunc()
     } else {
@@ -110,9 +116,11 @@ export function nextTick (cb?: Function, ctx?: Object) {
     }
   }
   // $flow-disable-line
+  // 当调用nextTick 不传回调的时候 
   if (!cb && typeof Promise !== 'undefined') {
     return new Promise(resolve => {
       _resolve = resolve
     })
   }
 }
+

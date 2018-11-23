@@ -112,3 +112,61 @@ render(h) {
 
 * 通过patch方法，对比新旧VNode对象，通过DOM Diff算法，添加、修改、删除真正的DOM元素
 
+
+
+
+
+
+
+#### JSX 语法支持扩展属性
+
+
+
+```js
+const data = {
+    props: {
+        type: this.type,
+        action: this.action
+    },
+    ref: 'upload-inner'
+};
+
+// 这样就可以传属性
+const uploadComponent = <upload {...data}>  </upload>
+
+return (
+	<div>
+    	{ uploadComponent }
+    	{ this.$slots.tip }
+    </div>
+);
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
