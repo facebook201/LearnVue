@@ -18,6 +18,12 @@ render函数可以作为一道分割线 左边是**编译期** 将Vue的模板�
 
 #### createElement
 
+>`createElement('div', {}， [...]) `可接受的参数
+>
+>@returns {VNode}
+
+
+
 第一个参数：{ String | Object | function  } 必要的参数
 
 ```javascript
@@ -111,6 +117,12 @@ render(h) {
 * 当数据发生变化时，render函数执行生成VNode对象
 
 * 通过patch方法，对比新旧VNode对象，通过DOM Diff算法，添加、修改、删除真正的DOM元素
+
+
+
+
+
+
 
 
 

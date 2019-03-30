@@ -4,7 +4,7 @@
 
 * **在组件a中修改了state.count 那么其他组件是怎么监听到count的变化的？**
 
-只看store的构造函数constructor 和 state相关的部分，因为 Vuex可以让我们划分多个模块 每个模块都可以有自己的mutations action getter 
+只看store的构造函数constructor 和 state相关的部分，因为 Vuex可以让我们划分多个模块 每个模块都可以有自己的 mutations action getter 
 
 ```javascript
 const moduleA = {
