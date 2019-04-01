@@ -1,6 +1,5 @@
-
 const state = {
-  count: 0,
+  only: false
 };
 
 export default state;
